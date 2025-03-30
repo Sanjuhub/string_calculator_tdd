@@ -25,6 +25,7 @@ const add = (str) => {
 
   // Add each number in the array
   let sum = numbers.reduce((acc, curr) => {
+    if (curr > 1000) return acc;
     return acc + curr;
   }, 0);
 
