@@ -1,8 +1,14 @@
+/**
+ * Adds numbers from a string, supporting custom delimiters
+ * @param {string} str - Input string containing numbers to add
+ * @return {number} - Sum of the numbers in the string
+ */
 const add = (str) => {
   if (!str) return 0;
 
   let delimiters = [",", "\n"];
 
+  // Handle custom delimiter syntax
   if (str.startsWith("//")) {
     const parts = str.split("\n");
     const delimiterLine = parts.shift();
@@ -10,23 +16,26 @@ const add = (str) => {
     const matches = [...delimiterLine.matchAll(/\[(.*?)\]/g)];
 
     if (matches.length > 0) {
-      // multiple custom delimiters
+      // Parse multiple custom delimiters enclosed in square brackets
       delimiters = matches.map((m) => m[1]);
     } else {
-      // single-character custom delimiter
+      // Parse single-character custom delimiter
       delimiters = [delimiterLine[2]];
     }
 
     str = parts.join("\n");
   }
 
+  // Create regex to split by any of the delimiters
   const splitRegex = new RegExp(delimiters.map(escapeRegex).join("|"), "g");
 
+  // Parse numbers from the string and filter out non-numbers
   const numbers = str
     .split(splitRegex)
     .map((n) => parseInt(n))
     .filter((n) => !isNaN(n));
 
+  // Check for negative numbers
   let negativeNumbers = numbers.filter((n) => n < 0);
 
   if (negativeNumbers.length > 0) {
@@ -41,6 +50,11 @@ const add = (str) => {
   return sum;
 };
 
+/**
+ * Escapes special regex characters in a string
+ * @param {string} str - String to escape
+ * @return {string} - Escaped string safe for regex
+ */
 const escapeRegex = (str) => {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 };
