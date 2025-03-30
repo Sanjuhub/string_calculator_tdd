@@ -1,25 +1,37 @@
 const add = (str) => {
   if (!str) return 0;
 
-  let delimiter = ",";
+  let delimiters = [",", "\n"];
 
   if (str.startsWith("//")) {
     const parts = str.split("\n");
-    console.log('parts :', parts);
 
-    delimiter = parts[0].split("//")[1];
+    const delimiterLine = parts.shift();
 
-    if (delimiter.startsWith("[")) {
-      delimiter = delimiter.slice(1, -1);
+    const matches = [...delimiterLine.matchAll(/\[(.*?)\]/g)];
+
+    if (matches.length > 0) {
+      // multiple custom delimiters
+      delimiters = matches.map((m) => m[1]);
+    } else {
+      // single-character custom delimiter
+      delimiters = [delimiterLine[2]];
     }
-    
-    str = parts[1];
+
+    str = parts.join("\n");
   }
+
+  // Create regex to split by all delimiters
+  const splitRegex = new RegExp(
+    delimiters.map((d) => d.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|"),
+    "g"
+  );
+  console.log("splitRegex :", splitRegex);
 
   // Split the string by new line and comma and map each element to an integer
   let numbers = str
     .split("\n")
-    .map((part) => part.split(delimiter))
+    .map((part) => part.split(splitRegex))
     .flat()
     .map((n) => parseInt(n));
 
