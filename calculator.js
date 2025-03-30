@@ -5,7 +5,6 @@ const add = (str) => {
 
   if (str.startsWith("//")) {
     const parts = str.split("\n");
-
     const delimiterLine = parts.shift();
 
     const matches = [...delimiterLine.matchAll(/\[(.*?)\]/g)];
@@ -21,19 +20,12 @@ const add = (str) => {
     str = parts.join("\n");
   }
 
-  // Create regex to split by all delimiters
-  const splitRegex = new RegExp(
-    delimiters.map((d) => d.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|"),
-    "g"
-  );
-  console.log("splitRegex :", splitRegex);
+  const splitRegex = new RegExp(delimiters.map(escapeRegex).join("|"), "g");
 
-  // Split the string by new line and comma and map each element to an integer
-  let numbers = str
-    .split("\n")
-    .map((part) => part.split(splitRegex))
-    .flat()
-    .map((n) => parseInt(n));
+  const numbers = str
+    .split(splitRegex)
+    .map((n) => parseInt(n))
+    .filter((n) => !isNaN(n));
 
   let negativeNumbers = numbers.filter((n) => n < 0);
 
@@ -41,13 +33,16 @@ const add = (str) => {
     throw new Error(`negatives not allowed: ${negativeNumbers.join(",")}`);
   }
 
-  // Add each number in the array
   let sum = numbers.reduce((acc, curr) => {
     if (curr > 1000) return acc;
     return acc + curr;
   }, 0);
 
   return sum;
+};
+
+const escapeRegex = (str) => {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 };
 
 module.exports = add;

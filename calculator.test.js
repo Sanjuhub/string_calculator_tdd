@@ -47,3 +47,7 @@ test("supports multi-character delimiters", () => {
 test("supports multiple delimiters", () => {
   expect(add("//[*][%]\n1*2%3")).toBe(6);
 });
+
+test("supports multiple delimiters with different lengths", () => {
+  expect(add("//[*****][%%][&&&&&]\n1*****2%%3&&&&&4")).toBe(10);
+});
