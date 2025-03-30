@@ -5,8 +5,14 @@ const add = (str) => {
 
   if (str.startsWith("//")) {
     const parts = str.split("\n");
+    console.log('parts :', parts);
 
     delimiter = parts[0].split("//")[1];
+
+    if (delimiter.startsWith("[")) {
+      delimiter = delimiter.slice(1, -1);
+    }
+    
     str = parts[1];
   }
 
