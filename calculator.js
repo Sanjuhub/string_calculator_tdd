@@ -1,8 +1,14 @@
 const add = (str) => {
   if (!str) return 0;
 
-  // Split the string by comma and map each element to an integer
-  let numbers = str.split(",").map((n) => parseInt(n));
+  //str = "4\n2,3\n4,55"
+
+  // Split the string by new line and comma and map each element to an integer
+  let numbers = str
+    .split("\n")
+    .map((part) => part.split(","))
+    .flat()
+    .map((n) => parseInt(n));
 
   // Add each number in the array
   let sum = numbers.reduce((acc, curr) => {
