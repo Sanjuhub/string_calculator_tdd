@@ -23,3 +23,17 @@ test("returns sum of multiple numbers with new lines and commas", () => {
 test("returns sum of multiple numbers with custom delimiter", () => {
     expect(add("//;\n1;2")).toBe(3);
 });
+
+test("returns sum of multiple numbers with custom delimiter", () => {
+    expect(add("//#\n1#2#3#4#5")).toBe(15);
+});
+
+test("throws for single negative number", () => {
+    expect(() => add("1,-2")).toThrow("negatives not allowed: -2");
+});
+
+test("throws for multiple negative numbers", () => {
+    expect(() => add("1,-2,3,-4")).toThrow("negatives not allowed: -2,-4");
+});
+
+
